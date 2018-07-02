@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>GIF-Tastic</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB"
+        crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" media="screen" href="assests/css/style.css" />
+
+    <script src="assests/javascript/javascript.js"></script>
+</head>
+
+<body>
+    <div class="row">
+        <div class="col-sm-12" id="heady">
+            <h1 id="animal-head">Animal Buttons!</h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12" id="buttonfun">
+            <div id="buttons-go-here"></div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-9">
+            <div id="pictures"></div>
+        </div>
+        <div class="col-sm-3">
+            <h3>Add an Animal</h3>
+            <input type="text" class="input-bar" id="input1">
+            <br>
+            <br>
+            <button type="submit" id="clickthat">Click To Submit</button>
+        </div>
+
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script type="text/javascript">
+        // create an array for my buttons
+        var buttons = ["Tiger", "Dog", "Cat", "Buffalo", "Lion", "Kangaroo", "Wallaby", "Turtle", "Squirrel", "Zebra"];
+        var picky = $("#pictures");
+        function displayInfo() {
+            animalname = $(this).attr("info");
+            queryURL = "https://api.giphy.com/v1/gifs/search?api_key=wbAnk4Q091PlDvmb5DBMjplnWSqEWM12&q=" + animalname + "&limit=10&offset=0&rating=PG&lang=en"
+
+            $.ajax({
+                url: queryURL,
+                method: "GET"
+            }).then(function (response) {
+
+                var loadall = response.data;
+                console.log(loadall);
+                for (var i = 0; i < loadall.length; i++) {
+                    var newDiv = $("<div>");
+                    newDiv.addClass("unit")
+                    var ratings = loadall[i].rating;
+                    var gif = loadall[i].images.fixed_height.url;
+                    console.log(ratings);
+                    var rater = $("<p>").text("Ratings: " + ratings);
+                    var gifer = $("<img>").attr("src", gif).addClass("move");
+                    gifer.addClass("data-state")
+                    gifer.attr({ "data-animate": loadall[i].images.fixed_height.url });
+                    gifer.attr({ 'data-state': "animate" });
+                    gifer.attr({ "data-still": loadall[i].images.fixed_height_still.url });
+                    newDiv.append(rater);
+                    newDiv.append(gifer);
+
+                    picky.prepend(newDiv);
+                }
+                $(".move").on("click", function () {
+                var state = $(this).attr('data-state');
+
+
+                if (state === "animate") {
+                    $(this).attr("src", $(this).attr("data-still"));
+                    $(this).attr("data-state", "still");
+                } else {
+                    $(this).attr("src", $(this).attr("data-animate"));
+                    $(this).attr("data-state", "animate");
+                }
+
+            })
+
+            });
+            // $(".move").on("click", function () {
+            //     var state = $(this).attr('data-state');
+
+
+            //     if (state === "animate") {
+            //         $(this).attr("src", $(this).attr("data-still"));
+            //         $(this).attr("data-state", "still");
+            //     } else {
+            //         $(this).attr("src", $(this).attr("data-animate"));
+            //         $(this).attr("data-state", "animate");
+            //     }
+
+            // })
+
+
+        }
+
+
+        function reset() {
+            var re2 = picky.empty();
+        }
+
+        //create a function to render new buttons
+        function renderButtons() {
+            $("#buttons-go-here").empty();
+
+            for (var i = 0; i < buttons.length; i++) {
+                var newbutton = $("<button>");
+                newbutton.attr("info", buttons[i]);
+                newbutton.addClass("newbies");
+                newbutton.text(buttons[i]);
+                $("#buttons-go-here").append(newbutton);
+            }
+        };
+        $("#clickthat").on("click", function (events) {
+
+
+            events.preventDefault();
+
+            var userinput = $("#input1").val().trim();
+
+            buttons.push(userinput);
+            renderButtons();
+            $("#input1").val("");
+
+        });
+        $(".move").on("click", function () {
+            response.push(stopPlay());
+            console.log(stopPlay());
+
+        })
+
+
+
+        $(document).on("click", ".newbies", displayInfo);
+        renderButtons();
+        $(document).on("click", ".newbies", reset);
+
+
+
+
+
+
+
+    </script>
+</body>
+
+</html>

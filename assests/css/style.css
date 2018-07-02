@@ -1,0 +1,11 @@
+#heady{
+    height: 75px;
+    background: url(images/country-quilt.png);
+}
+#animal-head{
+    color: black;
+    text-align: center;
+}
+.input-bar{
+    width: 70%;
+}
